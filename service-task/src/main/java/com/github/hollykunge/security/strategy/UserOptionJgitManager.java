@@ -12,6 +12,7 @@ import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
@@ -86,6 +87,59 @@ public class UserOptionJgitManager extends UserOptionJgitInterface {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    /**
+     * 当前仓库使用人保存文件，此方法会关闭git
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean gitAdd() throws Exception {
+        //校验git用户
+        super.judgeGitAndUser();
+        try {
+            this.gitAddContent(git, currentUser);
+            return true;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            super.gitClose();
+        }
+    }
+
+    /**
+     * 指定提交人进行git保存
+     * @param gitCommitDTO
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean gitAdd(GitCommitDTO gitCommitDTO) throws Exception {
+        super.judgeGit();
+        try {
+            this.gitAddContent(git, gitCommitDTO);
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private Git gitAddContent(Git git,GitCommitDTO gitCommitDTO) throws Exception {
+        if (StringUtils.isEmpty(gitCommitDTO.getFilePath())) {
+            throw new BaseException("提交的文件路径不能为空或null...");
+        }
+        checkRule(gitCommitDTO);
+        if (StringUtils.isEmpty(gitCommitDTO.getDecription())) {
+            throw new BaseException("提交文件必须要有描述...");
+        }
+        try{
+            git.add().addFilepattern(gitCommitDTO.getFilePath()).call();
+        }catch (Exception e){
+            log.error(ExceptionCommonUtil.getExceptionMessage(e));
+            throw e;
+        }
+        return git;
     }
 
     /**

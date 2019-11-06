@@ -66,7 +66,7 @@ public class TaskInfoBiz extends BaseBiz<TaskInfoMapper, TaskEntity> {
         entity.setDefultBranch(GitConfig.defultMergeBranch);
         //创建任务
         super.insertSelective(entity);
-        //生成一个创建者的usertaskmap
+        //生成一个创建者的usertaskmap，分支使用自己的分支
         UserTaskMap userTaskMap = generateUserTaskMapEntity(entity);
         userTaskMapMapper.insertSelective(userTaskMap);
         //生成git仓库
@@ -108,7 +108,7 @@ public class TaskInfoBiz extends BaseBiz<TaskInfoMapper, TaskEntity> {
             throw new BaseException("任务名称不能为空...");
         }
         UserTaskMap userTaskMap = new UserTaskMap();
-        userTaskMap.setGitBranchName(GitConfig.defultMergeBranch);
+        userTaskMap.setGitBranchName(UUIDUtils.generateShortUuid());
         userTaskMap.setTaskId(entity.getId());
         userTaskMap.setTaskName(entity.getName());
         userTaskMap.setUserId(entity.getTaskExecutorId());

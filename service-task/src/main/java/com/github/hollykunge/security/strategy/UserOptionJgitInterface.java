@@ -20,19 +20,34 @@ public abstract class UserOptionJgitInterface extends BaseJgitManager {
      */
     public abstract boolean initRepoFile() throws Exception;
     /**
-     * 当前仓库使用人，提交文件
+     * 当前仓库使用人，提交文件（先保存再提交）
      * @return
      * @throws GitAPIException
      */
     public abstract boolean gitCommit() throws Exception;
 
     /**
-     * 指定提交人提交文件
+     * 指定提交人提交文件（先保存再提交）
      * @param gitCommitDTO
      * @return
      * @throws Exception
      */
     public abstract boolean gitCommit(GitCommitDTO gitCommitDTO) throws Exception;
+
+    /**
+     * 当前仓库使用人保存文件（只保存不提交）
+     * @return
+     * @throws Exception
+     */
+    public abstract boolean gitAdd() throws Exception;
+
+    /**
+     * 指定提交人进行git保存（只保存不提交）
+     * @param gitCommitDTO
+     * @return
+     * @throws Exception
+     */
+    public abstract boolean gitAdd(GitCommitDTO gitCommitDTO) throws Exception;
 
     /**
      * 切换分支,如果分支名称不存在则新创建分支

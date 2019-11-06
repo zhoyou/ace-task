@@ -23,7 +23,7 @@ import java.io.File;
 public class TaskInfoController extends BaseController<TaskInfoBiz, TaskEntity> {
 
     /**
-     * 新建任务，同时创建仓库
+     * 新建任务，同时创建仓库,同时生成执行人使用的分支
      *
      * @param taskEntity
      * @return

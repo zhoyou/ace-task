@@ -17,10 +17,30 @@ import java.io.IOException;
 @RestController
 @RequestMapping("userTask")
 public class UserTaskController extends BaseController<UserTaskBiz, UserTaskMap> {
+    /**
+     * 拉取人员参与协同编辑
+     * @param entity
+     * @return
+     * @throws IOException
+     * @throws GitAPIException
+     */
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public ObjectRestResponse<UserTaskMap> pullTaskUser(@RequestBody UserTaskMap entity) throws IOException, GitAPIException {
         baseBiz.pullTaskUser(entity,request.getHeader("userId"));
         return new ObjectRestResponse<UserTaskMap>().rel(true);
+    }
+
+    /**
+     * 删除协同人员
+     * @param id 协同人员map主键
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "remove", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ObjectRestResponse<UserTaskMap> removeTaskUser(String id) throws Exception {
+        baseBiz.removeTaskUser(request.getHeader("userId"),id);
+        return new ObjectRestResponse().rel(true);
     }
 }
